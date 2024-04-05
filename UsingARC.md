@@ -19,3 +19,4 @@ What queues can you use?
 ```
 $ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done
 ```
+Should you require assistance with Research/HPC-related matters, you can submit a ticket to Research IT at: https://bit.ly/arc-help.
