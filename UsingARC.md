@@ -21,3 +21,7 @@ What queues can you use?
 ```
 $ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done
 ```
+Touch files (update file timestamps) recursively for an entire directory (-h includes symbolic links, -a only updates the access time not modification time):
+```
+$ find . -exec touch -ha {} \;
+```
