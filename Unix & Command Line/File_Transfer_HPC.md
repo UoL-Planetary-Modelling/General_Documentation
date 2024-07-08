@@ -1,4 +1,4 @@
-# File Transfer Using SCP and Screen on Linux
+# File Transfer Using SCP, rsync, nohup and screen on Linux
 This guide covers how to use **scp** and **rsync** for transferring files and how to ensure transfers are not interrupted using **nohup** and **screen**. 
 These tools are helpful for maintaining uninterrupted file transfers, especially when dealing with large datasets.
 
