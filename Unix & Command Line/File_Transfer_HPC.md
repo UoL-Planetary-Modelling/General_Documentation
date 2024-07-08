@@ -6,7 +6,7 @@ These tools are helpful for maintaining uninterrupted file transfers, especially
 `scp` is a command-line utility for securely copying files and directories between two locations, either on the same machine or between different machines. 
 It uses SSH for data transfer and provides the same level of security and encryption.
 
-### Basic Usage
+#### Basic Usage
 To copy files from a remote server to your local machine:
 ```scp username@remote_host:/remote/path/to/file /local/path```
 
@@ -14,7 +14,7 @@ To copy files from your local machine to a remote server:
 ```scp /local/path/to/file username@remote_host:/remote/path```
 
 
-### Rsync for File Transfer
+## Rsync for File Transfer
 rsync is another utility for efficiently synchronizing files between different systems. It's useful when you need to avoid copying files that already exist.
 
 #### Basic Usage
@@ -26,7 +26,7 @@ To transfer files from a remote server to your local machine without copying exi
 ## Copying Large Number of Files:
 For transferring a large number of files, you'll want to use methods that won't be interrupted if the connection drops. Two effective options are nohup and screen.
 
-### Using Nohup
+## Using Nohup
 nohup allows a command to run even after the user has logged out. This is useful for long-running processes.
 
 #### Steps to use nohup
@@ -49,7 +49,7 @@ Bring the job to the foreground:
 Terminate the job:
 Press Ctrl + C
 
-### Screen
+## Using Screen
 screen allows multiple terminal sessions to be created, accessed, and controlled from a single terminal. 
 Screen windows stay connected if the connection to the main session is lost, so its useful for file transfer
 
