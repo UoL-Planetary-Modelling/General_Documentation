@@ -32,15 +32,13 @@ Note you will also need permissions to the input data folder, and if using WACCM
 ### Compsets
 - `--compset` is the argument that specifies the component set. The compset specifies the component models and if they are active or not, forcing scenarios, and physics options for the models. 
 
-- Available Compsets are listed [here](https://docs.cesm.ucar.edu/models/cesm2/config/compsets.html)
-
 ### Resolution
 
 - `--res` specifies the model resolution.
 
 - Compsets determine which grid is required.
 
-- Link for CESM Supported Grids [here](http://www.cesm.ucar.edu/models/cesm2/config/grids.html)
+- Available compsets, CESM supported grids and [here](https://docs.cesm.ucar.edu/models/cesm2/config/) (select the model version in the top right hand corner)
 
 
 - After running create_newcase, a $CASEROOT directory is created that contains the model script needed to build and run the case.
@@ -281,11 +279,14 @@ In this example:
 
 - **Optional:** You can preview commands that will be run at submission time using `./preview_run`
 
-- Create a submission script to contain all the required options and commands for running the model e.g. 
+- Create a submission script to contain all the required options and job scripts for running the model e.g. 
 
 ```
+#Run with current environment (-V)
 #$ -V
+# Run in the current directory (-cwd)
 #$ -cwd
+Request some time- min 15 mins - max 48 hours
 #$ -l h_rt=48:00:00
 
 #$ -P feps-cpu
@@ -297,10 +298,48 @@ cd /nobackup/sestay/cesm2/cases/SMax_3M_FX2000_f19f19mg16/
 python case.submit
 ```
 
-- Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using:
-        - `qsub -cwd submission_script.run`
+- More info on job scripts can be found in the arc docs [here](https://arcdocs.leeds.ac.uk/usage/batchjob.html#job-scripts)
+
+- Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using: `qsub -cwd submission_script.run`
+- This returns some text to confirm our job has been submitted and provides us with the jobs unique ID number.
 
 
-## 10) Log Files
+## 10) Archiving
 
-## 11) Archiving
+
+## 11) Log Files
+
+- The log files are files in the format $model.log.* e.g. cesm.log.240414-023702.gz,  atm.log.240414-023702.gz and cpl.log.240414-023702.gz
+
+- When the model is running, it produces the log files in the run directory (RUNDIR) e.g. $USER/cesm2/cases/SMin_3M_FX2000_f19f19mg16/run/. When the run completes successfully, the model moves the log files into the archive directory (DOUT_S_ROOT) e.g. /nobackup/$USER/cesm2/archive/SMin_3M_FX2000_f19f19mg16/logs/
+
+- If the model fails, the log files remains in the run directory.
+- If a run completed successfully, the last several lines of the cpl.log.* file will have a string like SUCCESSFUL TERMINATION OF CESM. If you don’t see this message, it means the run has failed.
+- 
+
+
+## Checking, monitoring, deleting jobs 
+
+Check what queues can you use
+```
+$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done
+```
+List available nodes (to find out which queues are free before you submit your job):
+```
+$ qstat -g c
+```
+List your or another user jobs to check the status (queuing, running etc)
+```
+$ qstat -u $USER
+```
+If your job is not running yet, you can see when it is scheduled to go on using
+```
+qsched -u $USER
+```
+
+Jobs can be cancelled using
+```
+qdel <job_id>
+```
+
+- See also the UsingARC.md file in the repo here: General_Documentation/HPC_&_Command_Line/[UsingARC.md](https://github.com/UoL-Planetary-Modelling/General_Documentation/blob/main/HPC_%26_Command_Line/UsingARC.md)
