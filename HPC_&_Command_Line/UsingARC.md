@@ -22,6 +22,10 @@ What queues can you use?
 ```
 $ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done
 ```
+Jobs can be cancelled using
+```
+qdel <job_id>
+```
 
 ## How to avoid deletion of files in /nobackup/user:
 /:
