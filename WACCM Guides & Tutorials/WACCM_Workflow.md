@@ -1,3 +1,39 @@
+# Table of Contents
+
+[0) First Time Usage](#0-first-time-usage)
+
+[1) Create a New Case](#1-create-a-new-case)
+   - [Compsets](#compsets)
+   - [Resolution](#resolution)
+
+[2) Change the Number of Cores (Optional)](#2-change-the-number-of-cores-optional)
+
+[3) Case Set Up](#3-set-up-the-case)
+
+[4) Edit SourceMods](#4-edit-sourcemods)
+
+[5) Modify .xml Files](#5-modify-xml-files)
+   - [env_build.xml](#env_buildxml)
+   - [env_run.xml](#env_runxml)
+   - [Run Types](#run-types)
+
+[6) Edit user_nl_cam File](#6-edit-user_nl_cam-file)
+
+[7) Build the Model](#7-build-the-model)
+   - [Check Input Data (Optional)](#check-input-data-optional)
+
+[8) Run the Model](#8-run-the-model)
+
+[9) Archiving](#9-archiving)
+
+[10) Log Files](#10-log-files)
+
+[11) Checking, Monitoring, and Deleting Jobs](#11-checking-monitoring-and-deleting-jobs)
+
+[12) Continuing or Re-running the Same Case](#12-continuing-or-re-running-the-same-case)
+
+
+
 ## 0) First time usage
 
 - If you have not used WACCM before, create a directory to contain your cases e.g.
@@ -60,17 +96,20 @@ Note you will also need permissions to the input data folder, and if using WACCM
     - 80 cores are used as default (2 nodes), but you can change this to 40 if you wanted (e.g. if you can see only 40 cores are free in the job queue and you want your job to be run faster)
     ```./xmlchange NTASKS=40```
 
-## 3) Set up the case
+## 3) Case Set Up
 
 - ```./case.setup``` will create various scripts (e.g. case.run, case.st_archive), directories (e.g. the /run/ directory), and files (e.g. user_nl_cam file (where you can customise component namelist options and set parameters for model output) 
 
 ## 4) Edit SourceMods
 
-- If you want to make modifications to the CESM code, the best practise is to copy the relevant sub-routine into the SourceMods directory in your case directory. For example, if you wanted to modify a CAM subroutine, you would copy that subroutine to the following location `/nobackup/$USER/cesm2/cases/[case_name]/SourceMods/src.cam/`
+- If you want to make modifications to the CESM code, the best practice is to copy the relevant sub-routine into the SourceMods directory in your case directory. For example, if you wanted to modify a CAM subroutine, you would copy that subroutine to the following location `/nobackup/$USER/cesm2/cases/[case_name]/SourceMods/src.cam/`
 
-- You can copy files from the source code (e.g. at /home/home01/earfw/release_cesm2_1_3/components/cam/src/) and edit them in the sourcemods folder if you want to adjust any processes, rates etc. Do **NOT** edit files directly in the model folder there.
+- You can copy files from the source code for the particular model version you are using (e.g. at /home/home01/earfw/release_cesm2_1_3/components/cam/src/ ) and edit them in the sourcemods folder if you want to adjust any processes, rates etc. Do **NOT** edit files directly in the model folder there.
 
-- You will need files for the MIFs in this folder, any changes to the chemistry, physics etc
+- For example, subroutines for any chemistry, physics etc can be changed e.g.
+    - mo_photo.F90 - photolysis
+    - mo_usrrxt.F90 - reactions
+
 
 ##  5) Modify .xml files
 
@@ -275,7 +314,7 @@ In this example:
 - The command `./check_input_data --download` checks whether all required input data has been downloaded, and if not, downloads it
 - This step isn't neccessary, but can be useful as a check before running the model
   
-## 9) Run the Model 
+## 8) Run the Model 
 
 - **Optional:** You can preview commands that will be run at submission time using `./preview_run`
 
@@ -304,14 +343,14 @@ python case.submit
 - This returns some text to confirm our job has been submitted and provides us with the jobs unique ID number.
 
 
-## 10) Archiving
+## 9) Archiving
 
 - If the model run is successful, the CESM netcdf output history files are automatically moved to a short term archive ($DOUT_S_ROOT) by case.st_archive e.g. /nobackup/$USER/cesm2/archive/SMin_3M_FX2000_f19f19mg16/logs/
 - If a model run was unsuccessful the output remains in the Run Directory ($RUNDIR) and the short term archive is not created.
 - If both $RUNDIR and $DOUT_S_ROOT are in the arc /nobackup/$USER/ file space, it's a good idea to move your model output files to a more permanent location as soon as you are able.
 - You can also back up key files from your case directory (e.g. any sourcemods, user_nl_cam, env_build, env_run) to a repo in the Github organisation as a branch from the repo for the relevant model verion (e.g. cesm2.13). **Be very careful not to overwrite anything from the main branch when pushing changes!**
 
-## 11) Log Files
+## 10) Log Files
 
 - The log files are files in the format $model.log.* e.g. cesm.log.240414-023702.gz,  atm.log.240414-023702.gz and cpl.log.240414-023702.gz
 
@@ -322,7 +361,7 @@ python case.submit
 - 
 
 
-## 12) Checking, monitoring, deleting jobs 
+## 11) Checking, monitoring, and deleting jobs 
 
 - Check what queues can you use with `$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done`
 - List available nodes (to find out which queues are free before you submit your job): `$ qstat -g c`
@@ -333,7 +372,7 @@ python case.submit
 - See also the UsingARC.md file in the repo here: General_Documentation/HPC_&_Command_Line/[UsingARC.md](https://github.com/UoL-Planetary-Modelling/General_Documentation/blob/main/HPC_%26_Command_Line/UsingARC.md)
 
 
-## 13) Continuing or re-running the same case
+## 12) Continuing or re-running the same case
 
 - If the model has been successful and you want to carry it on with no changes, change $CONTINUE_RUN to TRUE and resubmit (see section 5).
 - If the model has crashed, and you need to make changes, you will need to 'clean' the case, make any edits and then re-set up/re-build (one or both depending on what edits you need to make).
