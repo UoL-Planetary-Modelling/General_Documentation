@@ -1,4 +1,4 @@
-# Table of Contents
+## Table of Contents
 
 [0) First Time Usage](#0-first-time-usage)
 
@@ -32,7 +32,9 @@
 
 [12) Continuing or Re-running the Same Case](#12-continuing-or-re-running-the-same-case)
 
-
+## 
+# WACCM WorkFlow
+##
 
 ## 0) First time usage
 
