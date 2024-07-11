@@ -181,7 +181,7 @@ Branch runs are typically used when sensitivity or parameter studies are require
 
 - **Below are some common options to change. You don't necessarily need all of these, and note this is not comprehensve**
 
-### Output Frequency/file contents
+### Output Frequency/ Variables
 
 - avgflag_pertape, fincl1, fincl2, fincl13 etc, mfilt, and nhtfrq together control the ouput data contents/frequency.
 
@@ -306,40 +306,35 @@ python case.submit
 
 ## 10) Archiving
 
+- If the model run is successful, the CESM netcdf output history files are automatically moved to a short term archive ($DOUT_S_ROOT) by case.st_archive e.g. /nobackup/$USER/cesm2/archive/SMin_3M_FX2000_f19f19mg16/logs/
+- If a model run was unsuccessful the output remains in the Run Directory ($RUNDIR) and the short term archive is not created.
+- If both $RUNDIR and $DOUT_S_ROOT are in the arc /nobackup/$USER/ file space, it's a good idea to move your model output files to a more permanent location as soon as you are able.
+- You can also back up key files from your case directory (e.g. any sourcemods, user_nl_cam, env_build, env_run) to a repo in the Github organisation as a branch from the repo for the relevant model verion (e.g. cesm2.13). **Be very careful not to overwrite anything from the main branch when pushing changes!**
 
 ## 11) Log Files
 
 - The log files are files in the format $model.log.* e.g. cesm.log.240414-023702.gz,  atm.log.240414-023702.gz and cpl.log.240414-023702.gz
 
-- When the model is running, it produces the log files in the run directory (RUNDIR) e.g. $USER/cesm2/cases/SMin_3M_FX2000_f19f19mg16/run/. When the run completes successfully, the model moves the log files into the archive directory (DOUT_S_ROOT) e.g. /nobackup/$USER/cesm2/archive/SMin_3M_FX2000_f19f19mg16/logs/
+- When the model is running, it produces the log files in the run directory (RUNDIR) e.g. $USER/cesm2/cases/SMin_3M_FX2000_f19f19mg16/run/. When the run completes successfully, the model moves the log files into the archive directory $DOUT_S_ROOT 
 
 - If the model fails, the log files remains in the run directory.
 - If a run completed successfully, the last several lines of the cpl.log.* file will have a string like SUCCESSFUL TERMINATION OF CESM. If you don’t see this message, it means the run has failed.
 - 
 
 
-## Checking, monitoring, deleting jobs 
+## 12) Checking, monitoring, deleting jobs 
 
-Check what queues can you use
-```
-$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done
-```
-List available nodes (to find out which queues are free before you submit your job):
-```
-$ qstat -g c
-```
-List your or another user jobs to check the status (queuing, running etc)
-```
-$ qstat -u $USER
-```
-If your job is not running yet, you can see when it is scheduled to go on using
-```
-qsched -u $USER
-```
-
-Jobs can be cancelled using
-```
-qdel <job_id>
-```
+- Check what queues can you use with `$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done`
+- List available nodes (to find out which queues are free before you submit your job): `$ qstat -g c`
+- List your or another user jobs to check the status (queuing, running etc) with `$ qstat -u $USER`
+- If your job is not running yet, you can see when it is scheduled to go on using `qsched -u $USER`
+- Jobs can be cancelled using `qdel <job_id>`
 
 - See also the UsingARC.md file in the repo here: General_Documentation/HPC_&_Command_Line/[UsingARC.md](https://github.com/UoL-Planetary-Modelling/General_Documentation/blob/main/HPC_%26_Command_Line/UsingARC.md)
+
+
+## 13) Continuing or re-running the same case
+
+- If the model has been successful and you want to carry it on with no changes, change $CONTINUE_RUN to TRUE and resubmit (see section 5).
+- If the model has crashed, and you need to make changes, you will need to 'clean' the case, make any edits and then re-set up/re-build (one or both depending on what edits you need to make).
+- You can do this using the options `./case.build --clean` and/or `./case.setup --clean`
