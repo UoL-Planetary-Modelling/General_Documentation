@@ -23,6 +23,8 @@ Note you will also need permissions to the input data folder, and if using WACCM
 
     ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive caes name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
     
+
+
     e.g. ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4 --compset FX2000 --res f19_f19_mg16 --machine arc4 --run-unsupported```
 
 - N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will notify you of this if so
@@ -34,14 +36,16 @@ Note you will also need permissions to the input data folder, and if using WACCM
 
 ### Resolution
 
+- `--res` specifies the model resolution.
+
 - Compsets determine which grid is required.
 
 - Link for CESM Supported Grids [here](http://www.cesm.ucar.edu/models/cesm2/config/grids.html)
 
 
-- After running create_newcase, a $CASEROOT directory is created that contains the model script needed to build and run the case
+- After running create_newcase, a $CASEROOT directory is created that contains the model script needed to build and run the case.
 
-- Once you've created a new case, use `cd` to navigate to the new case directory
+- Once you've created a new case, use `cd` to navigate to the new case directory.
 
     `cd /nobackup/$USER/cesm2/cases/[case_name]`
 
@@ -131,8 +135,8 @@ Note that the $RUN_TYPE setting is only important for the initial run of a produ
         - ```./xmlchange STOP_N=6```
         - ```./xmlchange STOP_OPTION='nmonths'```
 
-#### **Restart files**
-- Restart files are written by each model component at intervals dictated by **$REST_OPTION** and **$REST_N**. If a run encounters problems and crashes, restart files function as a back up point - you can continue the run from the latest restart point.
+### **Restart files** 
+- Restart files are written by each model component at intervals dictated by **$REST_OPTION** and **$REST_N** in env_run.xml. If a run encounters problems and crashes, restart files function as a back up point - you can continue the run from the latest restart point.
 - Restart files allow the model to stop and then start again with bit-for-bit exact capability (i.e. the model output is exactly the same as if it had never been stopped).
 - The default values for these two variables are set to be the same as $STOP_OPTION and $STOP_N.
 - In most cases, you don't need to change these variables, but it can be useful if you want to be able to start the model again from a particular point, or if you want restart files more often than you are running the model for at each submission.
@@ -166,18 +170,22 @@ Branch runs are typically used when sensitivity or parameter studies are require
 
 ## 6) Edit user_nl_cam file
 
-This file results in the creation of component namelists, the *_in files (i.e. atm_in, lnd_in, and so on). The *_in files are located in $CASEROOT/CaseDocs/ and in $RUNDIR.
+- Edit the user_nl_cam file in your chosen text editor to make changes to the standard options.
 
-Edit the user_nl_cam file in your chosen text editor to make changes to the standard options. The *_in files should not be directly edited. Any manual changes of the *_in files will be overwritten when you compile or submit the run.
+- This file results in the creation of component namelists, the *_in files (i.e. atm_in, lnd_in, and so on). The *_in files are located in $CASEROOT/CaseDocs/ and in $RUNDIR.
 
-You can generate the namelists by running ./preview_namelists to create the *_in files. Note that this step is optional as the script preview_namelists is also called when you build the model.
+- The *_in files should not be directly edited. Any manual changes of the *_in files will be overwritten when you compile or submit the run. You cannot change the namelist variables after the run is submitted or when CONTINUE_RUN=TRUE.
 
-Documentation is available on the different variables, options etc on the CESM webpage [here](https://docs.cesm.ucar.edu/models/cesm2/settings/current/cam_nml.html). Search for relevant variables to see info on them.
-Note that you cannot change the namelist variables after the run is submitted or when CONTINUE_RUN=TRUE.
+- Generate the namelists by running ./preview_namelists to create the *_in files. Note that this step is optional as the script preview_namelists is also called when you build the model.
 
-#### Output Frequency/file contents
+- Documentation is available on the different variables, options etc on the CESM webpage [here](https://docs.cesm.ucar.edu/models/cesm2/settings/current/cam_nml.html). Search for relevant variables to see info on them.
 
-avgflag_pertape, fincl1, fincl2, fincl13 etc, mfilt, and nhtfrq together control the ouput data contents/frequency.
+
+- **Below are some common options to change. You don't necessarily need all of these, and note this is not comprehensve**
+
+### Output Frequency/file contents
+
+- avgflag_pertape, fincl1, fincl2, fincl13 etc, mfilt, and nhtfrq together control the ouput data contents/frequency.
 
 - **avgflag_pertape** sets the averaging flag for all variables on a particular history file series. Valid values are:
     - A ==> Average,
@@ -216,5 +224,83 @@ In this example:
 - fincl3 (h2) is 3hourly average (specified in timesteps rather than hours. Standard WACCM time step is 30 minutes). Output is 8x 3hrly outputs per file (spanning one 24h period)
 
 
+### ncdata file
+
+- Specify the ncdata input file with:
+```
+&cam_initfiles_nl
+ ncdata         = '/resstore/b0154/Data/earfw/acp-21-15619-2021/new_Na_Fe_Mg_Si_K_Ca_f.c54137.FX2000climo.f19_f19.ZGTest.001.cam.i.0002-01-01-00000_c170817.nc'
+/
+```
+
+###  Forcing files
+
+- MIF files need to be specified in ext_frc_specifier, and any other forcing files e.g. 
+        ```
+          &chem_inparm
+          ext_frc_cycle_yr               = 2000
+          ext_frc_specifier              = 'NO2 -> /resstore/b0154/Data/earfw/acp-21-15619-2021/CCMI_emissions_aircraft_NO2_1850-2100_1.9x2.5_c130314.nc',
+                 'Fe -> /home/home02/sestay/WACCM_Input_Files/acp-21-15619-2021/jd_grl55292_2016_FeMIF_divd5_FSDW5_23Aug2018.nc',
+                 'Mg -> /home/home02/sestay/WACCM_Input_Files/acp-21-15619-2021/jd_grl55292_2016_MgMIF_divd5_FSDW5_15May2019.nc',
+                 'Na -> /home/home02/sestay/WACCM_Input_Files/acp-21-15619-2021/jd_grl55292_2016_NaMIF_divd5_FSDW5.nc',
+          ext_frc_type           = 'CYCLICAL'
+          /
+      ```
+
+### Solar Cycle files
+
+- If you want to run at solar minimum or maximum conditions you can specify the conditions for a particular day using solar_data_ymd. This will pull the solar spectral irradiance (ssi) and total solar irradiance (tsi) from the 'solar_irrad_data_file' file, and solar parameters (f10.7, f10.7a, kp, ap) from the 'solar_parms_data_file' files for the date specified. e.g. to pick a particular date from a previous solar cycle
+- Input data can be downloaded from [here](https://svn-ccsm-inputdata.cgd.ucar.edu/trunk/inputdata/atm/cam/solar/)
+- user_nl_cam e.g.
+        ```
+          &solar_data_opts
+          solar_data_type                = 'FIXED'
+          solar_data_ymd         = 20000101
+          solar_htng_spctrl_scl          = .true.
+          solar_irrad_data_file          = '/home/home02/sestay/WACCM_Input_Files/spectral_irradiance_Lean_1950-2014_daily_GOME-Mg_Leap_c150623.nc'
+          solar_parms_data_file          = '/home/home02/sestay/WACCM_Input_Files/SolarParmsEPP_CMIP6_daily_s18491230_e20150101_c190109.nc'
+          /
+          ```
+
+- An alternative method is to save your chosen ssi and tsi in .nc files with the same structures/attributes etc as above. You can then specify your chosen parameters specifically in your file. e.g f10.7 parameters for an average solar min or max, rather than those specifically from a previous date e.g.
+    - **Solar Max:** f10.7=200, f10.7a=200, kp=3.0, ap=15
+    - **Solar Min**: f10.7=70, f10.7a=70, kp=0.3, ap=1.8
 
 
+## 7) Build the Model 
+
+- The command `./case.build` builds the model. 
+- For Wuhus ported version, you need to use `./case.build --skip-provenance-check`
+
+### Check Input Data (optional)
+
+- The command `./check_input_data --download` checks whether all required input data has been downloaded, and if not, downloads it
+- This step isn't neccessary, but can be useful as a check before running the model
+  
+## 9) Run the Model 
+
+- **Optional:** You can preview commands that will be run at submission time using `./preview_run`
+
+- Create a submission script to contain all the required options and commands for running the model e.g. 
+
+```
+#$ -V
+#$ -cwd
+#$ -l h_rt=48:00:00
+
+#$ -P feps-cpu
+#$ -j y
+#$ -l h_vmem=4G
+#$ -l np=80
+# ----------------------------------------
+cd /nobackup/sestay/cesm2/cases/SMax_3M_FX2000_f19f19mg16/
+python case.submit
+```
+
+- Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using:
+        - `qsub -cwd submission_script.run`
+
+
+## 10) Log Files
+
+## 11) Archiving
