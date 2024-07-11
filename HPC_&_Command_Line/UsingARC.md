@@ -32,8 +32,10 @@ $ find . -exec touch -ha {} \;
 
 ## Connecting from Off Campus:
 
-Information here for creating a config file in your local Mobaxterm directory to connect via remote-access.leeds.ac.uk:
+The university has recently (as of 11-07-24) changed how you can connect to systems remotely via ssh. Info on how to set this up in the article here:
+https://it.leeds.ac.uk/it?id=kb_article_view&sysparm_article=KB0014674#issues
+
+From off campus you can also connect to the University VPN via Pulse Secure and then ssh in the usual way you would do from campus. Information about how to set up the VPN can be found here:
 https://arcdocs.leeds.ac.uk/getting_started/logon/logon-off-campus.html
 
-You can also connect to the University VPN via Pulse Secure and then ssh in the usual way. Information about how to set up the VPN can be found here:
-https://arcdocs.leeds.ac.uk/getting_started/logon/logon-off-campus.html
+
