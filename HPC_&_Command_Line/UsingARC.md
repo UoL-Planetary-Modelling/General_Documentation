@@ -18,6 +18,10 @@ List your or another user jobs
 ```
 $ qstat -u $USER
 ```
+Check when a job is scheduled to run
+```
+$ qsched -u $USER
+```
 What queues can you use?
 ```
 $ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done
