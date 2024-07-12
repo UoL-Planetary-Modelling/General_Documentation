@@ -1,0 +1,1 @@
+## Instructions for getting up and running with Jupyter Notebooks can be found in the Jupyter_Notebooks_Setup.md file [here](https://github.com/UoL-Planetary-Modelling/General_Documentation/blob/main/Python/Jupyter_Notebooks_Setup.md) 
