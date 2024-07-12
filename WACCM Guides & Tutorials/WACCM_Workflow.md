@@ -35,8 +35,11 @@
 ## 
 # WACCM WorkFlow
 ##
-
+**Note:** The below is correct for **cesm2.13** (see also, repo [here](https://github.com/UoL-Planetary-Modelling/cesm2.13/tree/Out-of-the-Box), there may be slight variations in commands/steps for different model versions. 
+##
 ## 0) First time usage
+
+### Set up Folder Structures
 
 - If you have not used WACCM before, create a directory to contain your cases e.g.
 
@@ -48,6 +51,38 @@
 
     ```mkdir /nobackup/[username]```
 
+### Edit .bashrc file
+
+- add the following lines in your ~/.bashrc, then logout arc4 then relogin (only do this once)
+```
+if [ "$SERVICE_NAME" = "arc4" ]; then
+export CIME_MODEL=cesm
+export CCSMUSER=$USER
+if [ ! -d /nobackup/$USER/cesm2_inputdata ]; then
+ln -s /nobackup/earfw/cesm2_inputdata/nobackup/$USER/cesm2_inputdata
+fi
+# Load Modules
+if [ -r /nobackup/cemac/cemac.sh ] ; then
+    . /nobackup/cemac/cemac.sh
+fi
+#intel
+module load netcdf/4.6.3
+module load python/2.7.16
+module load cmake
+module load mkl
+module load hdf5
+
+export ESMF_DIR=/resstore/b0154/Data/earfw/CAM_6_3_110/esmf_8_4_2_arc4
+export ESMFMKFILE=/resstore/b0154/Data/earfw/CAM_6_3_110/esmf_8_4_2_arc4/lib/libO/Linux.intel.64.openmpi.default/esmf.mk
+export ESMF_COMM=openmpi
+export ESMF_COMPILER=intel
+export ESMF_ABI=64
+export ESMF_OS=Linux
+export NETCDF=$NETCDF_HOME
+export NETCDF_PATH=$NETCDF_HOME
+export DIN_LOC_ROOT=/nobackup/earfw/cesm2_inputdata
+fi
+```
 
 ## 1) Create a new case
 
@@ -57,7 +92,7 @@
 
 - Create a new case using the `create_newcase` command from the relevant model folder. If you've not ported the model yourself you will need to be granted the correct permissions to use this 
 (currently working versions are either ported by Wuhu Feng or CEMAC. This document is correct for Wuhu's ported version).
-Note you will also need permissions to the input data folder, and if using WACCM-X compsets, you will need access to the ESMF libraries. 
+Note you will also need permissions to the input data folder and the ESMF libraries. 
 
     ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive caes name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
     
