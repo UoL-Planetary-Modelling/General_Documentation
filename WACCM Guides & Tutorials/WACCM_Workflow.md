@@ -90,8 +90,7 @@ fi
 
     ```cd /nobackup/[username]/cesm2/cases/```
 
-- Create a new case using the `create_newcase` command from the relevant model folder. If you've not ported the model yourself you will need to be granted the correct permissions to use this 
-(currently working versions are either ported by Wuhu Feng or CEMAC. This document is correct for Wuhu's ported version).
+- Create a new case using the `create_newcase` command from the relevant model folder. If you've not ported the model yourself you will need to be granted the correct permissions to use this (currently working versions are either ported by Wuhu Feng or CEMAC. This document is correct for Wuhu's ported version).
 Note you will also need permissions to the input data folder and the ESMF libraries. 
 
     ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive caes name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
@@ -100,16 +99,14 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
     e.g. ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4 --compset FX2000 --res f19_f19_mg16 --machine arc4 --run-unsupported```
 
-- N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will notify you of this if so
+- N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will prompt you about this if so
 
 ### Compsets
 - `--compset` is the argument that specifies the component set. The compset specifies the component models and if they are active or not, forcing scenarios, and physics options for the models. 
 
 ### Resolution
 
-- `--res` specifies the model resolution.
-
-- Compsets determine which grid is required.
+- `--res` specifies the model resolution. Compsets determine which grid is required.
 
 - Available compsets, CESM supported grids and [here](https://docs.cesm.ucar.edu/models/cesm2/config/) (select the model version in the top right hand corner)
 
@@ -126,31 +123,35 @@ Note you will also need permissions to the input data folder and the ESMF librar
 - Before calling ./case.setup, changes to NTASKS, NTHRDS, ROOTPE, PSTRID and NINST must be made, as well as any changes to the env_mach_specific.xml file, which contains some configuration for the module environment and environment variables.
 
 - **NTASKS variable**
-    - I think NTASKS is the ony option in env_build I've ever changed.
+    - NTASKS controls the number of cores used to run the model (I think NTASKS is the ony option in env_build I've ever changed).
+    - 80 cores are used as default (2 nodes), but you can decrease this to 40 (e.g. if you can see only 40 cores are free in the job queue and you want your job to be run faster), or increase the number of cores. There are 40 cores per node so use multiples of 40
 
     - **N.B.**, it is always best to change NTASKS using `./xmlchange` rather than manually editing the files, since using this method will change NTASKS for all linked components ('CPL:80', 'ATM:80', 'LND:80', 'ICE:80', 'OCN:80', 'ROF:80', 'GLC:80', 'WAV:80') whereas it's easy to forget if doing this manually.
 
-    - 80 cores are used as default (2 nodes), but you can change this to 40 if you wanted (e.g. if you can see only 40 cores are free in the job queue and you want your job to be run faster)
-    ```./xmlchange NTASKS=40```
+- To change NTASKS using ./xmlchange:
+```./xmlchange NTASKS=40```
 
 ## 3) Case Set Up
 
-- ```./case.setup``` will create various scripts (e.g. case.run, case.st_archive), directories (e.g. the /run/ directory), and files (e.g. user_nl_cam file (where you can customise component namelist options and set parameters for model output) 
+- To set up the case, run ```./case.setup```
+- This will create various scripts (e.g. case.run, case.st_archive), directories (e.g. the /run/ directory), and files (e.g. user_nl_cam file (where you can customise component namelist options and set parameters for model output))
 
 ## 4) Edit SourceMods
 
-- If you want to make modifications to the CESM code, the best practice is to copy the relevant sub-routine into the SourceMods directory in your case directory. For example, if you wanted to modify a CAM subroutine, you would copy that subroutine to the following location `/nobackup/$USER/cesm2/cases/[case_name]/SourceMods/src.cam/`
+- If you want to run the model 'out of the box', you don't need to add any source mods. However, if you want to make any changes to the standard model, this is how you do it.
+- To make modifications to the standard CESM code, the best practice is to copy the relevant sub-routine into the SourceMods directory in your case directory. For example, to modify a CAM subroutine, you would copy that subroutine to the following location `/nobackup/$USER/cesm2/cases/[case_name]/SourceMods/src.cam/`
 
-- You can copy files from the source code for the particular model version you are using (e.g. at /home/home01/earfw/release_cesm2_1_3/components/cam/src/ ) and edit them in the sourcemods folder if you want to adjust any processes, rates etc. Do **NOT** edit files directly in the model folder there.
+- Copy files from the source code for the particular model version you are using (e.g. at /home/home01/earfw/release_cesm2_1_3/components/cam/src/ ) and edit them in the sourcemods folder if you want to adjust any processes, rates etc. Do **NOT** edit files directly in the model folder there.
 
 - For example, subroutines for any chemistry, physics etc can be changed e.g.
     - mo_photo.F90 - photolysis
     - mo_usrrxt.F90 - reactions
+    - etc
 
 
 ##  5) Modify .xml files
 
-- Now, you will want to make any changes to the .xml files e.g. env_build.xml and env_run.xml. 
+- Again, to run the model 'out the box', you would skip this stage and move to step (6). But usually you will want to make some changes to the .xml files e.g. env_build.xml and env_run.xml. 
 
 - When modifying an *.xml file, you can use the **./xmlchange** tool. This is done using the syntax `./xmlchange VARIABLE=VALUE` in your case directory. If you want to change multiple variables at a time then it’s `./xmlchange KEY1=value1,KEY2=value2,KEY3=value3`
 
@@ -195,7 +196,7 @@ Using a text editor to take a look in the xml files, you can see descriptions of
 ### env_run.xml
 - There are various variables to change in env_run. 
 
-- When a CESM model run is first initialized, it is called an initial run. If an initial run has finished and you want to continue to run the case, you can change the variable **$CONTINUE_RUN** and submit the run again.
+- When a CESM model run is first initialised, it is called an initial run. If an initial run has finished and you want to continue to run the case, you can change the variable **$CONTINUE_RUN** and submit the run again.
 For an intial run, $CONTINUE_RUN must be set to FALSE. If the model continues a run, $CONTINUE_RUN is set to TRUE.
 
 - An initial CESM run can be initialized in one of **three run types**: startup, branch,or hybrid. The **$RUN_TYPE** variable is set to startup, hybrid, or branch accordingly (see section below). 
@@ -244,7 +245,7 @@ Branch runs are typically used when sensitivity or parameter studies are require
 
 ## 6) Edit user_nl_cam file
 
-- Edit the user_nl_cam file in your chosen text editor to make changes to the standard options.
+- To run the model 'out the box', skip this stage. To make changes to the standard options, edit the user_nl_cam file in your chosen text editor.
 
 - This file results in the creation of component namelists, the *_in files (i.e. atm_in, lnd_in, and so on). The *_in files are located in $CASEROOT/CaseDocs/ and in $RUNDIR.
 
@@ -355,24 +356,29 @@ In this example:
 
 - **Optional:** You can preview commands that will be run at submission time using `./preview_run`
 
-- Create a submission script to contain all the required options and job scripts for running the model e.g. 
+- Create a submission script to contain all the required options and job scripts for running the model
 
-```
-#Run with current environment (-V)
-#$ -V
-# Run in the current directory (-cwd)
-#$ -cwd
-Request some time- min 15 mins - max 48 hours
-#$ -l h_rt=48:00:00
-
-#$ -P feps-cpu
-#$ -j y
-#$ -l h_vmem=4G
-#$ -l np=80
-# ----------------------------------------
-cd /nobackup/sestay/cesm2/cases/SMax_3M_FX2000_f19f19mg16/
-python case.submit
-```
+  - To do this, from within your main case directory, run: `vi submission_script.run`.
+  - Next press i to enter insert mode, right click and select to paste in contents. You will need to change the case directory name as relevant. 
+      ```
+      #Run with current environment (-V)
+      #$ -V
+      # Run in the current directory (-cwd)
+      #$ -cwd
+      #Request some time- min 15 mins - max 48 hours
+      #$ -l h_rt=48:00:00
+      # Choose a queue to submit to. If this is left blank your job goes to the standard queue
+      #$ -P feps-cpu
+  
+      #$ -j y
+      #Request some memory per core
+      #$ -l h_vmem=4G
+      #Specifies the number of processes (cores). This must match the value set in NTASKS or the job will fail
+      #$ -l np=80
+      # ----------------------------------------
+      cd /nobackup/$USER/cesm2/cases/Case_name/
+      python case.submit
+      ```
 
 - More info on job scripts can be found in the arc docs [here](https://arcdocs.leeds.ac.uk/usage/batchjob.html#job-scripts)
 
@@ -385,7 +391,7 @@ python case.submit
 - If the model run is successful, the CESM netcdf output history files are automatically moved to a short term archive ($DOUT_S_ROOT) by case.st_archive e.g. /nobackup/$USER/cesm2/archive/SMin_3M_FX2000_f19f19mg16/logs/
 - If a model run was unsuccessful the output remains in the Run Directory ($RUNDIR) and the short term archive is not created.
 - If both $RUNDIR and $DOUT_S_ROOT are in the arc /nobackup/$USER/ file space, it's a good idea to move your model output files to a more permanent location as soon as you are able.
-- You can also back up key files from your case directory (e.g. any sourcemods, user_nl_cam, env_build, env_run) to a repo in the Github organisation as a branch from the repo for the relevant model verion (e.g. cesm2.13). **Be very careful not to overwrite anything from the main branch when pushing changes!**
+- You can also back up key files from your case directory (e.g. any sourcemods, user_nl_cam, env_build, env_run) to a repo in the Github organisation as a branch from the repo for the relevant model verion (e.g. cesm2.13). **Be careful not to overwrite anything from the main branch when pushing changes!**
 
 ## 10) Log Files
 
@@ -395,12 +401,14 @@ python case.submit
 
 - If the model fails, the log files remains in the run directory.
 - If a run completed successfully, the last several lines of the cpl.log.* file will have a string like SUCCESSFUL TERMINATION OF CESM. If you don’t see this message, it means the run has failed.
-- 
 
 
 ## 11) Checking, monitoring, and deleting jobs 
 
-- Check what queues can you use with `$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done`
+- The standard arc queue is called "40core-192G.q". If you don't specify a specific queue to use. Most other queues you need to be granted access to.
+- "feps-cpu" is the queue for the Faculty of Engineering & Physical Sciences. Members of the Faculty can request access from IT
+###
+- To check what queues can you use with `$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done`
 - List available nodes (to find out which queues are free before you submit your job): `$ qstat -g c`
 - List your or another user jobs to check the status (queuing, running etc) with `$ qstat -u $USER`
 - If your job is not running yet, you can see when it is scheduled to go on using `qsched -u $USER`
@@ -414,3 +422,4 @@ python case.submit
 - If the model has been successful and you want to carry it on with no changes, change $CONTINUE_RUN to TRUE and resubmit (see section 5).
 - If the model has crashed, and you need to make changes, you will need to 'clean' the case, make any edits and then re-set up/re-build (one or both depending on what edits you need to make).
 - You can do this using the options `./case.build --clean` and/or `./case.setup --clean`
+- If you want to submit a perpetual run (be careful with this!), you can add the line `qsub -cwd submission_script.run` to the end of your submission_script.run file. This will re-start the script and re-submit the model automatically when its done. You will need to make sure you are checking your case regularly and make sure there are no errors in the case before using as it can get into a muddle if the model crashes (it will keep trying to re-submit again and again...)
