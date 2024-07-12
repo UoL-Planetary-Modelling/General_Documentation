@@ -6,7 +6,7 @@
    - [Compsets](#compsets)
    - [Resolution](#resolution)
 
-[2) Change the Number of Cores (Optional)](#2-change-the-number-of-cores-optional)
+[2) Change the Number of Cores](#2-change-the-number-of-cores)
 
 [3) Case Set Up](#3-set-up-the-case)
 
@@ -131,7 +131,7 @@ Note you will also need permissions to the input data folder and the ESMF librar
     `cd /nobackup/$USER/cesm2/cases/[case_name]`
 
 
-## 2) Change the number of cores (optional)
+## 2) Change the number of cores
 
 - Before calling ./case.setup, changes to NTASKS, NTHRDS, ROOTPE, PSTRID and NINST must be made, as well as any changes to the env_mach_specific.xml file, which contains some configuration for the module environment and environment variables.
 
