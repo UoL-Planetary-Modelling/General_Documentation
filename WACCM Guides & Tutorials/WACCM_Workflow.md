@@ -137,7 +137,8 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
 - **NTASKS variable**
     - NTASKS controls the number of cores used to run the model (I think NTASKS is the ony option in env_build I've ever changed).
-    - 80 cores are used as default (2 nodes), but you can decrease this to 40 (e.g. if you can see only 40 cores are free in the job queue and you want your job to be run faster), or increase the number of cores. There are 40 cores per node so use multiples of 40
+    - 80 cores are used as default (2 nodes), and changing this is optional.
+    - You could decrease this to 40 (e.g. if you can see only 40 cores are free in the job queue and you want your job to be submitted more quickly), or increase the number of cores if you want the job to run faster (note, it will probably take longer to queue). There are 40 cores per node so use multiples of 40
 
     - **N.B.**, it is always best to change NTASKS using `./xmlchange` rather than manually editing the files, since using this method will change NTASKS for all linked components ('CPL:80', 'ATM:80', 'LND:80', 'ICE:80', 'OCN:80', 'ROF:80', 'GLC:80', 'WAV:80') whereas it's easy to forget if doing this manually.
 
