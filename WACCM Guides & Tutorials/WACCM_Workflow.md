@@ -83,6 +83,10 @@ export NETCDF_PATH=$NETCDF_HOME
 export DIN_LOC_ROOT=/nobackup/earfw/cesm2_inputdata
 fi
 ```
+### Do a test run
+
+- Before trying to run any of your own cases, you will want to do a test run using your chosen compset.
+- To do this, follow the steps below to create a case **using your chosen compset**. Skip any stages that make modifications to the standard case. 
 
 ## 1) Create a new case
 
@@ -102,13 +106,22 @@ Note you will also need permissions to the input data folder and the ESMF librar
 - N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will prompt you about this if so
 
 ### Compsets
-- `--compset` is the argument that specifies the component set. The compset specifies the component models and if they are active or not, forcing scenarios, and physics options for the models. 
+- `--compset` is the argument that specifies the component set. The compset specifies the component models and if they are active or not, forcing scenarios, and physics options for the models.
+- Some example compsets: FX2000, FWmadSD, 
+- Compsets are named with a shorthand, having different parts that mean different things (see link below).
+   - **2000** means perpetual year 2000
+   - **F** means specified sea surface temperatures / **B** means interactive ocean
+   - **FW** vs **FX** is WACCM (standard version, model top at ~140km) vs WACCM-X (extended version, model top at ~500-700km)
+   - **HIST** uses initialisation times between 1850 (pre-industrial) and "present day" (yr 2000)
+   - **SD** means specified dynamics
+   - **ma** is 'middle atmosphere'
+   - **mad** is 'middle atmosphere dynamics'
 
 ### Resolution
 
-- `--res` specifies the model resolution. Compsets determine which grid is required.
+- `--res` specifies the model resolution. Compsets determine which grid is required - check on the CESM web page.
 
-- Available compsets, CESM supported grids and [here](https://docs.cesm.ucar.edu/models/cesm2/config/) (select the model version in the top right hand corner)
+- Available compsets and CESM supported grids are [here](https://docs.cesm.ucar.edu/models/cesm2/config/) (select the model version in the top right hand corner)
 
 
 - After running create_newcase, a $CASEROOT directory is created that contains the model script needed to build and run the case.
@@ -382,7 +395,8 @@ In this example:
 
 - More info on job scripts can be found in the arc docs [here](https://arcdocs.leeds.ac.uk/usage/batchjob.html#job-scripts)
 
-- Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using: `qsub -cwd submission_script.run`
+- Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using:
+`qsub -cwd submission_script.run`
 - This returns some text to confirm our job has been submitted and provides us with the jobs unique ID number.
 
 
