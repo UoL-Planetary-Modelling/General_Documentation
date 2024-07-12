@@ -1,3 +1,14 @@
+# Contents
+
+  - [Windows Install](#windows-install)
+  - [Install on Arc or Wavechasm](#install-on-arc-or-wavechasm)
+  - [Creating a New Environment](#creating-a-new-environment)
+  - [Installing Conda Packages](#installing-conda-packages)
+  - [Open Jupyter Lab on Arc4](#open-jupyter-lab-on-arc4)
+
+
+#
+#
 
 # Anaconda & Python
 To run Python you need a package/environment management system called Anaconda. The full version is quite big to download so you can download a mini version with just the essential bits - called miniconda. 
