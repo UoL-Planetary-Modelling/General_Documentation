@@ -53,7 +53,8 @@
 
 ### Edit .bashrc file
 
-- add the following lines in your ~/.bashrc, then logout arc4 then relogin (only do this once)
+- add the following lines in your \~/.bashrc, then run source~/.bashrc - this will execute all the code below. 
+- This will also be executed automatically every time you log in.
 ```
 if [ "$SERVICE_NAME" = "arc4" ]; then
 export CIME_MODEL=cesm
@@ -99,8 +100,6 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
     ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive caes name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
     
-
-
     e.g. ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4 --compset FX2000 --res f19_f19_mg16 --machine arc4 --run-unsupported```
 
 - N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will prompt you about this if so
@@ -116,20 +115,17 @@ Note you will also need permissions to the input data folder and the ESMF librar
    - **SD** means specified dynamics
    - **ma** is 'middle atmosphere'
    - **mad** is 'middle atmosphere dynamics'
+- Available compsets and CESM supported grids are [here](https://docs.cesm.ucar.edu/models/cesm2/config/) (select the model version in the top right hand corner)
 
 ### Resolution
 
 - `--res` specifies the model resolution. Compsets determine which grid is required - check on the CESM web page.
-
-- Available compsets and CESM supported grids are [here](https://docs.cesm.ucar.edu/models/cesm2/config/) (select the model version in the top right hand corner)
-
 
 - After running create_newcase, a $CASEROOT directory is created that contains the model script needed to build and run the case.
 
 - Once you've created a new case, use `cd` to navigate to the new case directory.
 
     `cd /nobackup/$USER/cesm2/cases/[case_name]`
-
 
 ## 2) Change the number of cores
 
