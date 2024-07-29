@@ -35,9 +35,33 @@
 ## 
 # WACCM WorkFlow
 ##
+WACCM (Whole Atmosphere Community Climate Model) is an atmospheric model that is part of the larger suite of coupled models belonging to CESM - the [Community Earth System Model](https://www.cesm.ucar.edu/) developed at the [NSF National Centre for Atmospheric Research](https://ncar.ucar.edu/). CESM couples together models for the atmosphere, land, land ice, rivers, oceans, and sea ice. To model the atmosphere to altitudes up to ~140 km (WACCM) or ~500 km (WACCM-X), CESM is set-up by specifying a unique selection of model components, numerical packages and data.
+
+The steps below show how to run the WACCM model, with instructions given for a simple **test case** you can run to check if your setup is working.
+
 **Note:** The below is correct for **cesm2.13** (see also, repo [here](https://github.com/UoL-Planetary-Modelling/cesm2.13/tree/Out-of-the-Box), there may be slight variations in commands/steps for different model versions. 
 ##
 ## 0) First time usage
+
+### Access ARC4
+
+Assuming that you have an account on the ARC HPC system at Leeds, you will be able to run WACCM by following the steps below. If you do not have an account you can follow the instructions [here](https://arcdocs.leeds.ac.uk/getting_started/request_hpc_acct.html).
+
+ARC4 is the latest HPC cluster here at Leeds and provides a Linux-based HPC service, based on the CentOS 7 distribution. More information on ARC4 can be found [here](https://arcdocs.leeds.ac.uk/systems/arc4.html)
+
+As ARC4 is Linux-based, the user must interface with it via a terminal. Any terminal application that can run ssh is suitable, e.g., powershell in windows or the built in terminal on MacOS. University systems typically run on Windows 11 which have powershell built in, however if you do not have access to any terminal application, you can use [MobaXterm](https://mobaxterm.mobatek.net/). You can download it [here](https://mobaxterm.mobatek.net/download-home-edition.html). Both portable and installer versions will work, however you may need sudo permissions for the installer version.
+
+The portable version works out-of-the-box, however by default it creates a temp home directory when the terminal runs, which means anything saved here will be destroyed after you finish your terminal session. You can change this by going to Settings \> Configuration, and in the window that opens you have the option to specify a persistent home directory. You can create one, e.g., on your Desktop, and call it whatever you want.
+
+Once you have this, you can access ARC4 by running
+
+```
+ssh -Y <user>@arc4.leeds.ac.uk
+```
+
+The -Y flag enables x11 forwarding, i.e., you will be able to display graphical content on your local monitor that is generated remotely on ARC4. You can test if this is working by running the command `xeyes` on ARC4. If x11 forwarding is disabled, this command will not work.
+
+When logging onto ARC4 for the first time, you will be asked to save a unique fingerprint for security reasons and confirm your wish to connect. Type in yes, and you will be connected and no longer prompted in this way in the future unless logging in from a different machine.
 
 ### Set up Folder Structures
 
@@ -86,8 +110,9 @@ fi
 ```
 ### Do a test run
 
+- The steps below give instructions about how to run to WACCM.
 - Before trying to run any of your own cases, you will want to do a test run using your chosen compset.
-- To do this, follow the steps below to create a case **using your chosen compset**. Skip any stages that make modifications to the standard case. 
+- Instructions on how to do this for an example **test case** are given below, which you can follow by searching for **test case** throughout the document. Follow similar instructions for your own test run.
 
 ## 1) Create a new case
 
@@ -100,7 +125,7 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
     ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive caes name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
     
-    e.g. ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4 --compset FX2000 --res f19_f19_mg16 --machine arc4 --run-unsupported```
+    e.g. for a **test case**, you can do ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4 --compset FX2000 --res f19_f19_mg16 --machine arc4 --run-unsupported```
 
 - N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will prompt you about this if so
 
@@ -138,7 +163,7 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
     - **N.B.**, it is always best to change NTASKS using `./xmlchange` rather than manually editing the files, since using this method will change NTASKS for all linked components ('CPL:80', 'ATM:80', 'LND:80', 'ICE:80', 'OCN:80', 'ROF:80', 'GLC:80', 'WAV:80') whereas it's easy to forget if doing this manually.
 
-- To change NTASKS using ./xmlchange:
+- For a **test case**, you could change NTASKS using ./xmlchange:
 ```./xmlchange NTASKS=40```
 
 ## 3) Case Set Up
@@ -148,7 +173,7 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
 ## 4) Edit SourceMods
 
-- If you want to run the model 'out of the box', you don't need to add any source mods. However, if you want to make any changes to the standard model, this is how you do it.
+- If you want to run the model 'out of the box' like for your **test case**, you don't need to add any source mods and you can skip this step. However, if you want to make any changes to the standard model, this is how you do it.
 - To make modifications to the standard CESM code, the best practice is to copy the relevant sub-routine into the SourceMods directory in your case directory. For example, to modify a CAM subroutine, you would copy that subroutine to the following location `/nobackup/$USER/cesm2/cases/[case_name]/SourceMods/src.cam/`
 
 - Copy files from the source code for the particular model version you are using (e.g. at /home/home01/earfw/release_cesm2_1_3/components/cam/src/ ) and edit them in the sourcemods folder if you want to adjust any processes, rates etc. Do **NOT** edit files directly in the model folder there.
@@ -161,7 +186,7 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
 ##  5) Modify .xml files
 
-- Again, to run the model 'out the box', you would skip this stage and move to step (6). But usually you will want to make some changes to the .xml files e.g. env_build.xml and env_run.xml. 
+- Again, to run the model 'out the box', you would skip this stage and move to step (6). See instructions in **env_run.xml** section to modify this for your **test case**. Usually you will want to make some changes to the .xml files e.g. env_build.xml and env_run.xml. 
 
 - When modifying an *.xml file, you can use the **./xmlchange** tool. This is done using the syntax `./xmlchange VARIABLE=VALUE` in your case directory. If you want to change multiple variables at a time then it’s `./xmlchange KEY1=value1,KEY2=value2,KEY3=value3`
 
@@ -219,6 +244,8 @@ Note that the $RUN_TYPE setting is only important for the initial run of a produ
     - e.g.
         - ```./xmlchange STOP_N=6```
         - ```./xmlchange STOP_OPTION='nmonths'```
+  
+    - For your **test case**, you can run the model for 5 days, and, e.g., output restart files (see below) every day. `./xmlchange STOP_N=5,STOP_OPTION=ndays,REST_N=1` By default the model outputs restart files when the model finishes at STOP_N, however if you are running a longer model which may exceed wall time, you may wish to output restart files, e.g., every 6 months.
 
 ### **Restart files** 
 - Restart files are written by each model component at intervals dictated by **$REST_OPTION** and **$REST_N** in env_run.xml. If a run encounters problems and crashes, restart files function as a back up point - you can continue the run from the latest restart point.
@@ -255,7 +282,7 @@ Branch runs are typically used when sensitivity or parameter studies are require
 
 ## 6) Edit user_nl_cam file
 
-- To run the model 'out the box', skip this stage. To make changes to the standard options, edit the user_nl_cam file in your chosen text editor.
+- To run the model 'out the box' like for your **test case**, skip this stage. To make changes to the standard options, edit the user_nl_cam file in your chosen text editor.
 
 - This file results in the creation of component namelists, the *_in files (i.e. atm_in, lnd_in, and so on). The *_in files are located in $CASEROOT/CaseDocs/ and in $RUNDIR.
 
@@ -280,6 +307,7 @@ Branch runs are typically used when sensitivity or parameter studies are require
     - X ==> Maximum
     - L ==> Local-time
     - S ==> Standard deviation
+   
 - **fincl1,2,3**, etc contain list of fields to include on the first/second/third history file (by default the name of fincl1 contains the string "h0", fincl2 is "h1" etc)
 
 - **mfilt** specifies the maximum number of time samples that are written to each history file. 
@@ -389,7 +417,7 @@ In this example:
       cd /nobackup/$USER/cesm2/cases/Case_name/
       python case.submit
       ```
-
+- For your **test case** you can set `#$ -l np=40` since that is what was specified for NTASKS. For a 5 day test, setting `#$ -l h_rt=02:00:00` should be enough also.
 - More info on job scripts can be found in the arc docs [here](https://arcdocs.leeds.ac.uk/usage/batchjob.html#job-scripts)
 
 - Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using:
