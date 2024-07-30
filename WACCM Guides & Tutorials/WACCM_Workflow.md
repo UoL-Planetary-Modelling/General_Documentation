@@ -35,7 +35,7 @@
 ## 
 # WACCM WorkFlow
 ##
-WACCM (Whole Atmosphere Community Climate Model) is an atmospheric model that is part of the larger suite of coupled models belonging to CESM - the [Community Earth System Model](https://www.cesm.ucar.edu/) developed at the [NSF National Centre for Atmospheric Research](https://ncar.ucar.edu/). CESM couples together models for the atmosphere, land, land ice, rivers, oceans, and sea ice. To model the atmosphere to altitudes up to ~140 km (WACCM) or ~500 km (WACCM-X), CESM is set-up by specifying a unique selection of model components, numerical packages and data.
+WACCM (Whole Atmosphere Community Climate Model) is an atmospheric model that is part of the larger suite of coupled models belonging to CESM - the [Community Earth System Model](https://www.cesm.ucar.edu/) developed at the [NSF National Centre for Atmospheric Research](https://ncar.ucar.edu/). CESM couples together models for the atmosphere, land, land ice, rivers, oceans, and sea ice. To model the atmosphere up to altitudes of ~140 km (WACCM) or ~500 km (WACCM-X), CESM is set-up by specifying a unique selection of model components, numerical packages and data.
 
 The steps below show how to run the WACCM model, with instructions given for a simple **test case** you can run to check if your setup is working.
 
