@@ -77,7 +77,7 @@ When logging onto ARC4 for the first time, you will be asked to save a unique fi
 
 ### Edit .bashrc file
 
-- add the following lines in your \~/.bashrc, then run source~/.bashrc - this will execute all the code below. 
+- add the following lines in your \~/.bashrc, then run `source~/.bashrc` - this will execute all the code below. 
 - This will also be executed automatically every time you log in.
 ```
 if [ "$SERVICE_NAME" = "arc4" ]; then
@@ -108,6 +108,24 @@ export NETCDF_PATH=$NETCDF_HOME
 export DIN_LOC_ROOT=/nobackup/earfw/cesm2_inputdata
 fi
 ```
+
+To do this, run the commands below:
+
+- `cd ~`
+
+- `vi .bashrc`
+
+- Paste in the above (you can right click and select paste)
+
+- Press escape to ensure you are not in 'insert' mode. 
+
+- Type `:wq' to save and close
+
+- Then type `source~/.bashrc`
+
+
+
+
 ### Do a test run
 
 - The steps below give instructions about how to run to WACCM.
