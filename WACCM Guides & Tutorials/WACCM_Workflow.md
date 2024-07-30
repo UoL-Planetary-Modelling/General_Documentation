@@ -141,11 +141,12 @@ To do this, run the commands below:
 - Create a new case using the `create_newcase` command from the relevant model folder. If you've not ported the model yourself you will need to be granted the correct permissions to use this (currently working versions are either ported by Wuhu Feng or CEMAC. This document is correct for Wuhu's ported version).
 Note you will also need permissions to the input data folder and the ESMF libraries. 
 
-    ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive caes name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
-    
+    ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/[descriptive case name e.g. modelversion_compset_resolution] --compset [compset_name] --res [resolution_name] --machine arc4```
+  
+- N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will prompt you about this if so
+ 
     e.g. for a **test case**, you can do ```/home/home01/earfw/release_cesm2_1_3/cime/scripts/create_newcase --case /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4 --compset FX2000 --res f19_f19_mg16 --machine arc4 --run-unsupported```
 
-- N.B. Depending on the combination of compset, resolution etc you may need to add `--run-unsupported` but the terminal output will prompt you about this if so
 
 ### Compsets
 - `--compset` is the argument that specifies the component set. The compset specifies the component models and if they are active or not, forcing scenarios, and physics options for the models.
@@ -168,7 +169,12 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
 - Once you've created a new case, use `cd` to navigate to the new case directory.
 
-    `cd /nobackup/$USER/cesm2/cases/[case_name]`
+    ```cd /nobackup/$USER/cesm2/cases/[case_name]```
+
+  e.g. for a **test case**, you can run
+  
+    ```cd /nobackup/$USER/cesm2/cases/CESM213_FX2000_f19_f19_mg16_arc4```
+
 
 ## 2) Change the number of cores
 
@@ -188,6 +194,8 @@ Note you will also need permissions to the input data folder and the ESMF librar
 
 - To set up the case, run ```./case.setup```
 - This will create various scripts (e.g. case.run, case.st_archive), directories (e.g. the /run/ directory), and files (e.g. user_nl_cam file (where you can customise component namelist options and set parameters for model output))
+
+- e.g. For your **test case**, run ```./case.setup```
 
 ## 4) Edit SourceMods
 
@@ -366,7 +374,7 @@ In this example:
 
 ###  Forcing files
 
-- MIF files need to be specified in ext_frc_specifier, and any other forcing files e.g. 
+- Meteoric Inpt Function (MIF) files need to be specified in ext_frc_specifier, and any other forcing files e.g. 
         ```
           &chem_inparm
           ext_frc_cycle_yr               = 2000
@@ -402,6 +410,7 @@ In this example:
 
 - The command `./case.build` builds the model. 
 - For Wuhus ported version, you need to use `./case.build --skip-provenance-check`
+- e.g. for your **test case**, run `./case.build --skip-provenance-check`
 
 ### Check Input Data (optional)
 
@@ -412,9 +421,9 @@ In this example:
 
 - **Optional:** You can preview commands that will be run at submission time using `./preview_run`
 
-- Create a submission script to contain all the required options and job scripts for running the model
+- Create a submission script to contain all the required options and job scripts for running the model. You will need to do this for your **test case**:
 
-  - To do this, from within your main case directory, run: `vi submission_script.run`.
+  - From within your main case directory, run: `vi submission_script.run`.
   - Next press i to enter insert mode, right click and select to paste in contents. You will need to change the case directory name as relevant. 
       ```
       #Run with current environment (-V)
@@ -435,11 +444,17 @@ In this example:
       cd /nobackup/$USER/cesm2/cases/Case_name/
       python case.submit
       ```
-- For your **test case** you can set `#$ -l np=40` since that is what was specified for NTASKS. For a 5 day test, setting `#$ -l h_rt=02:00:00` should be enough also.
+
+- For your **test case** you can set `#$ -l np=40` since that is what was specified for NTASKS. For a 5 day test, setting `#$ -l h_rt=02:00:00` should be enough also. Note if you only have access to the main arc queues, remove the line `#$ -P feps-cpu`, or replace this with specific project cores you may have access to e.g. codita, Planet, etc (see section 11 for more info).
+   
+- Once finished editing your submission script, press 'Esc' to exit 'insert' mode. Then type ':wq' to save and exit.
+
 - More info on job scripts can be found in the arc docs [here](https://arcdocs.leeds.ac.uk/usage/batchjob.html#job-scripts)
 
-- Then, to run, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using:
+- Then, to run the model, change working directory to the case directory: `cd /path/to/case/directory/` (if you are not in there already) and run the model using:
+
 `qsub -cwd submission_script.run`
+
 - This returns some text to confirm our job has been submitted and provides us with the jobs unique ID number.
 
 
@@ -462,7 +477,7 @@ In this example:
 
 ## 11) Checking, monitoring, and deleting jobs 
 
-- The standard arc queue is called "40core-192G.q". If you don't specify a specific queue to use. Most other queues you need to be granted access to.
+- The standard arc queue is called "40core-192G". If you don't specify a specific queue to use. Most other queues you need to be granted access to.
 - "feps-cpu" is the queue for the Faculty of Engineering & Physical Sciences. Members of the Faculty can request access from IT
 ###
 - To check what queues can you use with `$ for list in $(qconf -sul);do qconf -su $list |& grep $USER >& /dev/null && echo $list;done`
