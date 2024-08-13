@@ -84,7 +84,7 @@ if [ "$SERVICE_NAME" = "arc4" ]; then
 export CIME_MODEL=cesm
 export CCSMUSER=$USER
 if [ ! -d /nobackup/$USER/cesm2_inputdata ]; then
-ln -s /nobackup/earfw/cesm2_inputdata/nobackup/$USER/cesm2_inputdata
+ln -s /nobackup/earfw/cesm2_inputdata /nobackup/$USER/cesm2_inputdata
 fi
 # Load Modules
 if [ -r /nobackup/cemac/cemac.sh ] ; then
