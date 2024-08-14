@@ -128,7 +128,7 @@ To do this, run the commands below:
 
 ### Do a test run
 
-- The steps below give instructions about how to run to WACCM.
+- The steps below give instructions about how to run the WACCM.
 - Before trying to run any of your own cases, you will want to do a test run using your chosen compset.
 - Instructions on how to do this for an example **test case** are given below, which you can follow by searching for **test case** throughout the document. Follow similar instructions for your own test run.
 
