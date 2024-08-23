@@ -92,16 +92,30 @@ Now you’re ready to open a notebook and get started!
 
 
 
-### Open jupyter lab on arc4:
+### Open Jupyter lab on arc4
 
-**Window 1**
+**Window 1(your terminal on arc4)**
 
-jupyter lab --no-browser --port=1112 &
+`jupyter lab --no-browser --port=1112 &`
 
 Note you can choose any 4digit number for the port
 
-**Window 2**
+**Window 2(the local terminal in your PC)**
 
-ssh -L 1112:localhost:1112 [username]@arc4.leeds.ac.uk
+`ssh -L 1112:localhost:1112 [username]@arc4.leeds.ac.uk`
 
 Next, open the link that popped up in the first window in your browser
+
+### Close the Jupyter lab Server
+
+If you want to close the Jupyter lab server. You can press `Crtl+C` on you keyboard to back to the terminal state(on arc4). Then you use the command `fg` to see the Jupyter server that is running. Press `Crtl+C` again and it will interrupted. The terminal will let you to choose `y/n` to close it. Press `y` and then it will be closed.
+
+### Additional Notes
+
+For the next time you want to access the Jupyter lab Server. You are required to go to the file path of your code or the father/ancestor file path of your code. Then:
+
+`conda activate [environment_name]`
+
+Skip the **Installing Conda Packages** section and follow the **Open Jupyter lab on arc4** section.
+
+
