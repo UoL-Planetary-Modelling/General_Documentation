@@ -1,0 +1,12 @@
+-bash-4.2$ date
+Sun  3 Nov 22:37:54 GMT 2024
+-bash-4.2$ df -h b*
+
+Filesystem                                            Size  Used Avail Use% Mounted on
+svmt003:/b0069                                         14T  9.7T  3.8T  73% /resstore/b0069
+svmt003:/b0121                                         60T   47T   13T  79% /resstore/b0121
+svmt010:/b0133/b0133                                  100T   96T  4.1T  96% /resstore/b0133
+svmt003:/b0154/b0154                                   12T  9.8T  2.3T  82% /resstore/b0154
+tmr-rsto02:/ifs/tmr-rsto-isilon001/rsto-az1/R2/b0206  113T   77T   37T  68% /resstore/b0206
+tmr-rsto02:/ifs/tmr-rsto-isilon001/rsto-az1/R2/b0211  5.0T  3.7T  1.4T  73% /resstore/b0211
+tmr-rsto02:/ifs/tmr-rsto-isilon001/rsto-az1/R2/b0243   50T   10T   41T  20% /resstore/b0243
