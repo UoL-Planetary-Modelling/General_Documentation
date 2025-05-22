@@ -27,3 +27,6 @@ Material that applies to running/developing all types of models.
     
 ### NCAS Intro to Scientific Computing Course 2016
 - Course notes and excercises from an old course, may be some useful info in here on Python
+
+### Aire
+- Instructions for running models on Aire.
