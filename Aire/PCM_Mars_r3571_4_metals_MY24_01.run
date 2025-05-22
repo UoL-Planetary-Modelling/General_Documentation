@@ -1,0 +1,43 @@
+#!/bin/bash
+#SBATCH --job-name=PCM_Mars_r3571_4_metals_MY24_01.run
+#SBATCH --time=48:00:00
+#SBATCH --ntasks=24
+#SBATCH --nodes=1
+#SBATCH --mem-per-cpu=10G
+#SBATCH --ntasks-per-node=24
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=cm19cjg@leeds.ac.uk
+
+source /scratch/earfw/git_PCM_MARS_r3769/PCM_ONEAPI_MPI_LIBS/bashrc_oneapi_mpi_pcm
+export NETCDF_HOME=/scratch/earfw/git_PCM_MARS_r3769/PCM_ONEAPI_MPI_LIBS
+
+export OMP_NUM_THREADS=1
+export OMP_PLACES=cores
+export PSC_OMP_AFFINITY=FALSE
+ulimit -s unlimited
+
+cd /scratch/cm19cjg/r3571_4_metal_run
+
+export RUN_scenario_dir=/scratch/cm19cjg/r3571_4_metal_run
+export OUT_scenario_dir=/scratch/cm19cjg/r3571_4_metal_run/OUTPUT
+export FILE_scenario_dir=PCM_Mars_r3571_4_metals
+
+/bin/rm -rf gcm_64x48x73_phymars_para.e
+/bin/rm -rf start.nc startfi.nc
+cp /users/cm19cjg/PCM_Mars_r3571/trunk/LMDZ.COMMON/bin/* .
+cp callphys_MY24.def callphys.def
+
+sed s/9999/61/ run.def.ref > run.def
+
+ln -s start0.nc start.nc
+ln -s startfi0.nc startfi.nc
+
+ mpirun -np 24 ./gcm_64x48x73_phymars_para.e
+
+        mv stats.nc OUTPUT/${FILE_scenario_dir}_stats_MY24_01.nc
+      mv diagfi.nc OUTPUT/${FILE_scenario_dir}_diagfi_MY24_01.nc
+           mv run.def OUTPUT/${FILE_scenario_dir}_run_MY24_01.def
+mv restartfi.nc OUTPUT/${FILE_scenario_dir}_restartfi_MY24_01.nc
+    mv restart.nc OUTPUT/${FILE_scenario_dir}_restart_MY24_01.nc
+
+sbatch PCM_Mars_r3571_4_metals_MY24_02.run
