@@ -57,3 +57,7 @@ Create a job script (see example ‘PCM_Mars_r3571_4_metals_MY24_01.run’) and 
 ```
 sbatch PCM_Mars_r3571_4_metals_MY24_01.run
 ```
+To see the progress of your run use:
+```
+squeue -u $USER
+```
