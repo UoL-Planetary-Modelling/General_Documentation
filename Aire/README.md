@@ -1,7 +1,8 @@
-### Instructions for running the Mars PCM on Aire.
+Aire Documentation: https://arcdocs.leeds.ac.uk/aire/welcome.html  
 
-Aire Documentation: https://arcdocs.leeds.ac.uk/aire/welcome.html
 HPC1 Course Material: https://arctraining.github.io/hpc1/welcome.html
+
+### Instructions for running the Mars PCM on Aire.
 
 Copy svn files from Wuhu to your home directory:
 ```
