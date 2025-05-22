@@ -8,7 +8,7 @@ for example, to copy the local folder ```Fe_MIF``` and all its contents to the n
 ```sh
 rclone copy Fe_MIF onedrive:Research/Modelling/ARC4_results/Fe_results/ -P
 ```
-where the -P flag means that rlcone will report the progress of the file transfer.
+where the -P flag means that rclone will report the progress of the file transfer.
 
 To transfer many folders, a bash script can be produced to transfer one after another, e.g.
 
