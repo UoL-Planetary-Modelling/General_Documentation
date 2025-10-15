@@ -26,10 +26,12 @@ vim ~/.globusonline/lta/config-paths
 /scratch/cm19cjg/,0,1
 ```
 8) Check that your Aire collection is present in 'Your Collections' in your 'File Manager' on globus.org.
-9) To put your aire collection online:
+9) Put your Aire collection online:
 ```
 ./globusconnectpersonal -start &
 ```
 10) Create an endpoint for resstore.
 11) You can now transfer data between Aire and your other created endpoints.
+
+    
 Infomation obtained from -> https://arcdocs.leeds.ac.uk/aire/usage/file_data_management/data_transfer.html 
