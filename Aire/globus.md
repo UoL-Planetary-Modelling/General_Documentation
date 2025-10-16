@@ -45,6 +45,6 @@ ssh {user}@uol-lin-213775.leeds.ac.uk
 
 13. Go to Subscriptions under Settings to apply to get added to the University of Leeds Subscription.  
     
-14. You can now transfer data between aire and restore using the file manager on the Globus web interface (make sure both endpoints are online when you start the transfer but they do not need to be for the duration of the transfer).  
+14. You can now transfer data between aire and restore using the file manager on the Globus web interface (make sure both endpoints are online).  
     
 Infomation obtained from -> https://arcdocs.leeds.ac.uk/aire/usage/file_data_management/data_transfer.html 
