@@ -39,6 +39,7 @@ ssh {user}@uol-lin-213775.leeds.ac.uk
 ```
 /uolstore/Research/b/b0252/Data/PCM_Mars
 ```
+If you get permission denied use kinit and enter your password.  
 12) Set up resstore as an endpoint in the same way you did for aire.
 13) Go to Subscriptions under Settings to apply to get added to the University of Leeds Subscription.
 14) You can now transfer data between aire and your other created endpoints.
